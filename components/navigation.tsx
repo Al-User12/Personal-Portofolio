@@ -47,109 +47,6 @@ export function Navigation() {
             <span className="font-serif text-xl font-bold text-accent">alfikri-labs</span>
           </button>
 
-<<<<<<< HEAD
-          <ul className="hidden md:flex items-center gap-8" role="menubar">
-            <li role="none">
-              <button
-                onClick={(e) => {
-                  if (isMobile) {
-                    const props = getInteractionProps('nav-about')
-                    props.onClick?.(e)
-                    setTimeout(() => scrollToSection("about"), 100)
-                  } else {
-                    scrollToSection("about")
-                  }
-                }}
-                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
-                  isMobile && isActive('nav-about') ? 'text-accent' : 'hover:text-accent'
-                }`}
-                role="menuitem"
-                aria-label="Navigate to About section"
-              >
-                About
-              </button>
-            </li>
-            <li role="none">
-              <button
-                onClick={(e) => {
-                  if (isMobile) {
-                    const props = getInteractionProps('nav-experience')
-                    props.onClick?.(e)
-                    setTimeout(() => scrollToSection("experience"), 100)
-                  } else {
-                    scrollToSection("experience")
-                  }
-                }}
-                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
-                  isMobile && isActive('nav-experience') ? 'text-accent' : 'hover:text-accent'
-                }`}
-                role="menuitem"
-                aria-label="Navigate to Experience section"
-              >
-                Experience
-              </button>
-            </li>
-            <li role="none">
-              <button
-                onClick={(e) => {
-                  if (isMobile) {
-                    const props = getInteractionProps('nav-projects')
-                    props.onClick?.(e)
-                    setTimeout(() => scrollToSection("projects"), 100)
-                  } else {
-                    scrollToSection("projects")
-                  }
-                }}
-                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
-                  isMobile && isActive('nav-projects') ? 'text-accent' : 'hover:text-accent'
-                }`}
-                role="menuitem"
-                aria-label="Navigate to Projects section"
-              >
-                Projects
-              </button>
-            </li>
-            <li role="none">
-              <button
-                onClick={(e) => {
-                  if (isMobile) {
-                    const props = getInteractionProps('nav-contact')
-                    props.onClick?.(e)
-                    setTimeout(() => scrollToSection("contact"), 100)
-                  } else {
-                    scrollToSection("contact")
-                  }
-                }}
-                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
-                  isMobile && isActive('nav-contact') ? 'text-accent' : 'hover:text-accent'
-                }`}
-                role="menuitem"
-                aria-label="Navigate to Contact section"
-              >
-                Contact
-              </button>
-            </li>
-          </ul>
-
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={(e) => {
-              if (isMobile) {
-                const props = getInteractionProps('theme-toggle')
-                props.onClick?.(e)
-                setTimeout(toggleTheme, 100)
-              } else {
-                toggleTheme()
-              }
-            }}
-            className={`focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
-              isMobile && isActive('theme-toggle') ? 'bg-accent/10' : 'hover:bg-accent/10'
-            }`}
-            aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-          >
-            {isDark ? <Sun className="w-5 h-5" aria-hidden="true" /> : <Moon className="w-5 h-5" aria-hidden="true" />}
-=======
           <div className="hidden md:flex items-center gap-8">
             <button
               onClick={() => scrollToSection("about")}
@@ -179,7 +76,6 @@ export function Navigation() {
 
           <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-accent/10">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
->>>>>>> parent of 8ca8878 (Refactor project for mobile interactions and update project name. Added a new hook for managing mobile interactions, enhancing user experience across various sections. Updated styles and interaction logic in multiple components to support mobile-specific behaviors.)
           </Button>
         </div>
       </div>
