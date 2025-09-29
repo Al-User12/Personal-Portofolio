@@ -17,7 +17,7 @@
   --secondary-foreground: oklch(0.45 0.15 285);
   --muted: oklch(0.95 0.02 270);
   --muted-foreground: oklch(0.55 0.08 270);
-  --accent: oklch(0.75 0.15 60); /* Gold #FFD700 */
+  --accent: oklch(0.65 0.18 55); /* Accessible Gold #E6C200 */
   --accent-foreground: oklch(0.15 0.05 270);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0.01 270);
@@ -54,7 +54,7 @@
   --secondary-foreground: oklch(0.95 0.02 60);
   --muted: oklch(0.15 0.08 270);
   --muted-foreground: oklch(0.65 0.08 270);
-  --accent: oklch(0.85 0.18 55); /* Bright Gold #FFD700 */
+  --accent: oklch(0.75 0.20 50); /* High Contrast Gold #F4C430 */
   --accent-foreground: oklch(0.08 0.05 270);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.95 0.02 60);
@@ -124,6 +124,63 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Enhanced Focus States for Accessibility */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [role="button"]:focus-visible,
+  [role="menuitem"]:focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+    outline-style: solid;
+  }
+
+  /* Custom focus ring for royal theme */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Skip link for keyboard navigation */
+  .skip-link {
+    @apply absolute left-0 top-0 z-[100] px-4 py-2 bg-accent text-accent-foreground font-medium rounded-br-md transform -translate-y-full focus:translate-y-0 transition-transform;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    .particle,
+    .particle-slow,
+    .particle-fast,
+    .floating-orb,
+    .mystic-particle {
+      animation: none !important;
+    }
+  }
+
+  /* Performance optimizations */
+  .crown-pulse-enhanced,
+  .name-glow-enhanced,
+  .shimmer-loop {
+    will-change: transform, filter;
+  }
+
+  .floating-orb,
+  .particle,
+  .particle-slow,
+  .particle-fast {
+    will-change: transform;
+    transform: translateZ(0); /* Force hardware acceleration */
   }
 
   /* Royal Typography */
@@ -336,7 +393,8 @@
     background: oklch(0.85 0.18 55);
     border-radius: 50%;
     animation: particle-float 12s infinite linear;
-    box-shadow: 0 0 6px oklch(0.85 0.18 55 / 0.8);
+    box-shadow: 0 0 4px oklch(0.85 0.18 55 / 0.6);
+    will-change: transform;
   }
 
   .particle-slow {

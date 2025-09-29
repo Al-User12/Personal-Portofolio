@@ -29,85 +29,108 @@ export function Navigation() {
   }
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-background/80 backdrop-blur-md border-b border-border/50" : "bg-transparent",
-      )}
-    >
+    <header role="banner">
+      <nav
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          isScrolled ? "bg-background/80 backdrop-blur-md border-b border-border/50" : "bg-transparent",
+        )}
+        role="navigation"
+        aria-label="Main navigation"
+      >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection("hero")}>
-            <Crown className="w-6 h-6 text-accent royal-glow" />
+          <button 
+            className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded-lg p-2 -m-2" 
+            onClick={() => scrollToSection("hero")}
+            aria-label="Go to top of page"
+          >
+            <Crown className="w-6 h-6 text-accent royal-glow" aria-hidden="true" />
             <span className="font-serif text-xl font-bold text-accent">alfikri-labs</span>
-          </div>
+          </button>
 
-          <div className="hidden md:flex items-center gap-8">
-            <button
-              onClick={(e) => {
-                if (isMobile) {
-                  const props = getInteractionProps('nav-about')
-                  props.onClick?.(e)
-                  setTimeout(() => scrollToSection("about"), 100)
-                } else {
-                  scrollToSection("about")
-                }
-              }}
-              className={`text-muted-foreground transition-colors ${
-                isMobile && isActive('nav-about') ? 'text-accent' : 'hover:text-accent'
-              }`}
-            >
-              About
-            </button>
-            <button
-              onClick={(e) => {
-                if (isMobile) {
-                  const props = getInteractionProps('nav-experience')
-                  props.onClick?.(e)
-                  setTimeout(() => scrollToSection("experience"), 100)
-                } else {
-                  scrollToSection("experience")
-                }
-              }}
-              className={`text-muted-foreground transition-colors ${
-                isMobile && isActive('nav-experience') ? 'text-accent' : 'hover:text-accent'
-              }`}
-            >
-              Experience
-            </button>
-            <button
-              onClick={(e) => {
-                if (isMobile) {
-                  const props = getInteractionProps('nav-projects')
-                  props.onClick?.(e)
-                  setTimeout(() => scrollToSection("projects"), 100)
-                } else {
-                  scrollToSection("projects")
-                }
-              }}
-              className={`text-muted-foreground transition-colors ${
-                isMobile && isActive('nav-projects') ? 'text-accent' : 'hover:text-accent'
-              }`}
-            >
-              Projects
-            </button>
-            <button
-              onClick={(e) => {
-                if (isMobile) {
-                  const props = getInteractionProps('nav-contact')
-                  props.onClick?.(e)
-                  setTimeout(() => scrollToSection("contact"), 100)
-                } else {
-                  scrollToSection("contact")
-                }
-              }}
-              className={`text-muted-foreground transition-colors ${
-                isMobile && isActive('nav-contact') ? 'text-accent' : 'hover:text-accent'
-              }`}
-            >
-              Contact
-            </button>
-          </div>
+          <ul className="hidden md:flex items-center gap-8" role="menubar">
+            <li role="none">
+              <button
+                onClick={(e) => {
+                  if (isMobile) {
+                    const props = getInteractionProps('nav-about')
+                    props.onClick?.(e)
+                    setTimeout(() => scrollToSection("about"), 100)
+                  } else {
+                    scrollToSection("about")
+                  }
+                }}
+                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
+                  isMobile && isActive('nav-about') ? 'text-accent' : 'hover:text-accent'
+                }`}
+                role="menuitem"
+                aria-label="Navigate to About section"
+              >
+                About
+              </button>
+            </li>
+            <li role="none">
+              <button
+                onClick={(e) => {
+                  if (isMobile) {
+                    const props = getInteractionProps('nav-experience')
+                    props.onClick?.(e)
+                    setTimeout(() => scrollToSection("experience"), 100)
+                  } else {
+                    scrollToSection("experience")
+                  }
+                }}
+                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
+                  isMobile && isActive('nav-experience') ? 'text-accent' : 'hover:text-accent'
+                }`}
+                role="menuitem"
+                aria-label="Navigate to Experience section"
+              >
+                Experience
+              </button>
+            </li>
+            <li role="none">
+              <button
+                onClick={(e) => {
+                  if (isMobile) {
+                    const props = getInteractionProps('nav-projects')
+                    props.onClick?.(e)
+                    setTimeout(() => scrollToSection("projects"), 100)
+                  } else {
+                    scrollToSection("projects")
+                  }
+                }}
+                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
+                  isMobile && isActive('nav-projects') ? 'text-accent' : 'hover:text-accent'
+                }`}
+                role="menuitem"
+                aria-label="Navigate to Projects section"
+              >
+                Projects
+              </button>
+            </li>
+            <li role="none">
+              <button
+                onClick={(e) => {
+                  if (isMobile) {
+                    const props = getInteractionProps('nav-contact')
+                    props.onClick?.(e)
+                    setTimeout(() => scrollToSection("contact"), 100)
+                  } else {
+                    scrollToSection("contact")
+                  }
+                }}
+                className={`text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded px-3 py-2 ${
+                  isMobile && isActive('nav-contact') ? 'text-accent' : 'hover:text-accent'
+                }`}
+                role="menuitem"
+                aria-label="Navigate to Contact section"
+              >
+                Contact
+              </button>
+            </li>
+          </ul>
 
           <Button 
             variant="ghost" 
@@ -121,14 +144,16 @@ export function Navigation() {
                 toggleTheme()
               }
             }}
-            className={`${
+            className={`focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
               isMobile && isActive('theme-toggle') ? 'bg-accent/10' : 'hover:bg-accent/10'
             }`}
+            aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
           >
-            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {isDark ? <Sun className="w-5 h-5" aria-hidden="true" /> : <Moon className="w-5 h-5" aria-hidden="true" />}
           </Button>
         </div>
       </div>
-    </nav>
+      </nav>
+    </header>
   )
 }

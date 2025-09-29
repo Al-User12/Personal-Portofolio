@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Code2, Brain, Blocks, Globe } from "lucide-react"
@@ -87,12 +88,12 @@ export function AboutSection() {
   ]
 
   return (
-    <section id="about" className="py-20 relative">
+    <section id="about" className="py-20 relative" aria-labelledby="about-heading">
       {/* Smooth Blend Overlay */}
-      <div className="absolute inset-0 section-blend pointer-events-none" />
+      <div className="absolute inset-0 section-blend pointer-events-none" aria-hidden="true" />
       
       {/* Floating elements coming from hero */}
-      <div className="absolute top-0 left-0 w-full h-40 pointer-events-none overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-40 pointer-events-none overflow-hidden" aria-hidden="true">
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
@@ -114,10 +115,14 @@ export function AboutSection() {
           <div className="space-y-6">
             <div className="relative">
               <div className="w-80 h-80 mx-auto lg:mx-0 rounded-2xl overflow-hidden border-4 border-accent/20 shadow-2xl">
-                <img
+                <Image
                   src="/professional-portrait-of-al-fikri-kholil-misbah--s.png"
-                  alt="Al Fikri Kholil Misbah"
+                  alt="Professional portrait of Al Fikri Kholil Misbah, Software Engineer specializing in AI, Blockchain, and Modern Web Development"
                   className="w-full h-full object-cover"
+                  width={320}
+                  height={320}
+                  priority
+                  sizes="(max-width: 768px) 280px, 320px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
               </div>
@@ -128,7 +133,7 @@ export function AboutSection() {
 
           <div className="space-y-8">
             <div>
-              <h2 className="royal-heading text-3xl md:text-4xl font-bold mb-6 text-accent">The Digital Artisan</h2>
+              <h2 id="about-heading" className="royal-heading text-3xl md:text-4xl font-bold mb-6 text-accent">The Digital Artisan</h2>
               <div className="space-y-4 royal-text text-lg text-muted-foreground">
                 <p>
                   Greetings, fellow seekers of digital excellence. I am Al Fikri Kholil Misbah, a craftsman in the realm

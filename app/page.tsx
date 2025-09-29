@@ -10,16 +10,21 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen">
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <ParticleBackground />
       <Navigation />
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <TechSection />
-      <ContactSection />
+      <main id="main-content" className="relative min-h-screen" role="main" aria-label="Main content">
+        <HeroSection />
+        <AboutSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <TechSection />
+        <ContactSection />
+      </main>
       <ScrollToTop />
-    </main>
+    </>
   )
 }

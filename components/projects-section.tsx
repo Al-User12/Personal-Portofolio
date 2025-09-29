@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -129,14 +130,18 @@ export function ProjectsSection() {
               {...getInteractionProps(cardId)}
             >
               <div className="relative overflow-hidden">
-                <img
+                <Image
                   src={project.image || "/placeholder.svg"}
-                  alt={project.title}
+                  alt={`Screenshot of ${project.title} - ${project.description.substring(0, 80)}...`}
                   className={`w-full h-48 object-cover transition-transform duration-500 ${
                     isMobile 
                       ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
                       : 'group-hover:scale-110'
                   }`}
+                  width={400}
+                  height={192}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div className={`absolute inset-0 bg-gradient-to-t from-background/80 to-transparent transition-opacity duration-300 ${
                   isMobile 

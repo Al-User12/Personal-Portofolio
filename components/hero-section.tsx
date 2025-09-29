@@ -15,7 +15,11 @@ export function HeroSection() {
 
   useEffect(() => {
     setMounted(true)
-    createParticles()
+    // Defer particle creation to improve initial load
+    const timer = setTimeout(() => {
+      createParticles()
+    }, 500)
+    return () => clearTimeout(timer)
   }, [])
 
   // Typing effect for "Software Engineer"
@@ -98,6 +102,8 @@ export function HeroSection() {
       className={`section-transition relative min-h-screen flex items-center justify-center overflow-hidden pt-28 md:pt-20 ${
         mysticMode ? "mystic-dark" : ""
       }`}
+      aria-labelledby="hero-heading"
+      role="banner"
     >
       <div
         className={`absolute inset-0 transition-all duration-1000 ${
@@ -143,7 +149,7 @@ export function HeroSection() {
                   mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 }`}
               >
-                <h1 className="royal-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 tracking-wide">
+                <h1 id="hero-heading" className="royal-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 tracking-wide">
                   <span
                     className="block text-[#E6C200] name-glow-enhanced"
                     data-text="Al Fikri Kholil Misbah"
@@ -189,7 +195,7 @@ export function HeroSection() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
                   <Button
                     size="lg"
-                    className={`bg-[#7B2CBF] border-2 border-[#E6C200] px-8 py-4 text-lg font-semibold group transition-all duration-300 min-h-[64px] rounded-xl ${
+                    className={`bg-[#7B2CBF] border-2 border-[#E6C200] px-8 py-4 text-lg font-semibold group transition-all duration-300 min-h-[64px] rounded-xl focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
                       isMobile && isActive('explore-btn')
                         ? 'bg-[#E6C200] text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
                         : 'hover:bg-[#E6C200] hover:text-[#7B2CBF] shadow-[0_8px_32px_rgba(123,44,191,0.3)] hover:shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
@@ -204,16 +210,17 @@ export function HeroSection() {
                         scrollToSection("projects")
                       }
                     }}
+                    aria-label="Explore my portfolio projects"
                   >
                     <Sparkles className={`w-5 h-5 mr-2 transition-transform ${
                       isMobile && isActive('explore-btn') ? 'rotate-12' : 'group-hover:rotate-12'
-                    }`} />
+                    }`} aria-hidden="true" />
                     Explore My Work
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
-                    className={`border-2 border-[#E6C200] text-[#E6C200] px-8 py-4 text-lg bg-transparent transition-all duration-300 min-h-[64px] rounded-xl font-semibold ${
+                    className={`border-2 border-[#E6C200] text-[#E6C200] px-8 py-4 text-lg bg-transparent transition-all duration-300 min-h-[64px] rounded-xl font-semibold focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${
                       isMobile && isActive('contact-btn')
                         ? 'bg-[#E6C200] text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
                         : 'hover:bg-[#E6C200] hover:text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.2)] hover:shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
@@ -227,6 +234,7 @@ export function HeroSection() {
                         scrollToSection("contact")
                       }
                     }}
+                    aria-label="Contact Al Fikri Kholil Misbah"
                   >
                     Contact the Dev
                   </Button>
@@ -322,22 +330,23 @@ export function HeroSection() {
               scrollToSection("about")
             }
           }}
-          className={`flex flex-col items-center gap-2 text-white/70 transition-colors group ${
+          className={`flex flex-col items-center gap-2 text-white/70 transition-colors group focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background rounded-lg p-2 ${
             isMobile && isActive('scroll-indicator') ? 'text-[#E6C200]' : 'hover:text-[#E6C200]'
           }`}
+          aria-label="Scroll down to About section"
         >
           <span className="text-sm font-medium">Scroll to discover</span>
           <ArrowDown className={`w-5 h-5 animate-bounce text-[#E6C200] ${
             isMobile && isActive('scroll-indicator') ? 'text-[#E6C200]' : 'group-hover:text-[#E6C200]'
-          }`} />
+          }`} aria-hidden="true" />
         </button>
       </div>
 
       {/* Smooth Transition Wave */}
-      <div className="wave-divider" />
+      <div className="wave-divider" aria-hidden="true" />
       
       {/* Floating Elements for Transition */}
-      <div className="floating-elements">
+      <div className="floating-elements" aria-hidden="true">
         <div className="floating-orb"></div>
         <div className="floating-orb"></div>
         <div className="floating-orb"></div>
@@ -347,7 +356,7 @@ export function HeroSection() {
       </div>
 
       {/* Elements that Float to About Section */}
-      <div className="absolute bottom-0 left-0 w-full h-32 pointer-events-none">
+      <div className="absolute bottom-0 left-0 w-full h-32 pointer-events-none" aria-hidden="true">
         <div className="float-to-about-element"></div>
         <div className="float-to-about-element"></div>
         <div className="float-to-about-element"></div>
@@ -355,7 +364,7 @@ export function HeroSection() {
       </div>
 
       {/* Mystic Particles for Transition */}
-      <div className="mystic-particles">
+      <div className="mystic-particles" aria-hidden="true">
         {[...Array(12)].map((_, i) => (
           <div
             key={i}
