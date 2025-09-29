@@ -61,6 +61,14 @@ export function useMobileInteractions() {
     }
   }, [])
 
+  const clearAllTouchStates = useCallback(() => {
+    setTouchStates(new Map())
+    
+    // Clear all timeouts
+    touchTimeoutRefs.current.forEach(timeout => clearTimeout(timeout))
+    touchTimeoutRefs.current.clear()
+  }, [])
+
   const isPressed = useCallback((elementId: string) => {
     return isMobile ? touchStates.get(elementId)?.isPressed || false : false
   }, [isMobile, touchStates])
@@ -74,6 +82,7 @@ export function useMobileInteractions() {
     onLongPress?: () => void
     longPressDelay?: number
     hapticFeedback?: boolean
+    toggleMode?: boolean // New option for toggle behavior
   }) => {
     if (!isMobile) {
       return {
@@ -81,7 +90,7 @@ export function useMobileInteractions() {
       }
     }
 
-    const { onTap, onLongPress, longPressDelay = 500, hapticFeedback = true } = options || {}
+    const { onTap, onLongPress, longPressDelay = 500, hapticFeedback = true, toggleMode = false } = options || {}
 
     return {
       onTouchStart: (e: React.TouchEvent) => {
@@ -91,7 +100,7 @@ export function useMobileInteractions() {
         
         setTouchState(elementId, {
           isPressed: true,
-          isHovered: true,
+          isHovered: toggleMode ? !touchStates.get(elementId)?.isHovered : true,
           startTime,
           startPosition: { x: touch.clientX, y: touch.clientY }
         })
@@ -130,7 +139,15 @@ export function useMobileInteractions() {
 
         // If moved too far, cancel the touch
         if (deltaX > threshold || deltaY > threshold) {
-          setTouchState(elementId, { isPressed: false, isHovered: false })
+          if (toggleMode) {
+            // In toggle mode, revert to previous hover state
+            setTouchState(elementId, { 
+              isPressed: false, 
+              isHovered: !touchStates.get(elementId)?.isHovered 
+            })
+          } else {
+            setTouchState(elementId, { isPressed: false, isHovered: false })
+          }
           
           // Clear long press timeout
           const timeout = touchTimeoutRefs.current.get(elementId)
@@ -149,18 +166,25 @@ export function useMobileInteractions() {
           const touchDuration = Date.now() - currentState.startTime
           
           // Only trigger tap if it was a short press (not a long press)
-          if (touchDuration < (longPressDelay || 500) && onTap) {
-            onTap()
+          if (touchDuration < (longPressDelay || 500)) {
+            if (toggleMode) {
+              // In toggle mode, keep the hover state as is (already toggled in onTouchStart)
+              setTouchState(elementId, { isPressed: false })
+            } else {
+              // Normal tap behavior
+              if (onTap) {
+                onTap()
+              }
+              // Smooth transition out of pressed state
+              setTouchState(elementId, { isPressed: false })
+              
+              // Remove hover state after a short delay for smooth animation
+              setTimeout(() => {
+                setTouchState(elementId, { isHovered: false })
+              }, 150)
+            }
           }
         }
-
-        // Smooth transition out of pressed state
-        setTouchState(elementId, { isPressed: false })
-        
-        // Remove hover state after a short delay for smooth animation
-        setTimeout(() => {
-          setTouchState(elementId, { isHovered: false })
-        }, 150)
 
         // Clear long press timeout
         const timeout = touchTimeoutRefs.current.get(elementId)
@@ -171,7 +195,15 @@ export function useMobileInteractions() {
       },
 
       onTouchCancel: () => {
-        setTouchState(elementId, { isPressed: false, isHovered: false })
+        if (toggleMode) {
+          // In toggle mode, revert to previous hover state
+          setTouchState(elementId, { 
+            isPressed: false, 
+            isHovered: !touchStates.get(elementId)?.isHovered 
+          })
+        } else {
+          setTouchState(elementId, { isPressed: false, isHovered: false })
+        }
         
         // Clear long press timeout
         const timeout = touchTimeoutRefs.current.get(elementId)
@@ -249,6 +281,8 @@ export function useMobileInteractions() {
     isPressed,
     isHovered,
     clearTouchState,
+    clearAllTouchStates,
+    setTouchState,
     getTouchInteractionProps,
     getTouchClasses,
     // Legacy compatibility
