@@ -37,12 +37,14 @@ export function ProjectsSection() {
       const img = new window.Image()
       img.src = imageSrc
       img.onload = () => handleImageLoad(index)
+      img.onerror = () => handleImageLoad(index) // Handle error case
       return img
     })
 
     return () => {
       preloadImages.forEach(img => {
         img.onload = null
+        img.onerror = null
       })
     }
   }, [handleImageLoad])
@@ -55,10 +57,19 @@ export function ProjectsSection() {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.getAttribute('data-index') || '0')
             setVisibleImages(prev => new Set([...prev, index]))
+            
+            // Preload the image when it becomes visible
+            const project = projects[index]
+            if (project && project.image) {
+              const img = new window.Image()
+              img.src = project.image
+              img.onload = () => handleImageLoad(index)
+              img.onerror = () => handleImageLoad(index) // Handle error case
+            }
           }
         })
       },
-      { rootMargin: '50px' }
+      { rootMargin: '100px' } // Increased margin for earlier loading
     )
 
     return () => {
@@ -66,7 +77,7 @@ export function ProjectsSection() {
         observerRef.current.disconnect()
       }
     }
-  }, [])
+  }, [handleImageLoad])
   
   const projects = [
     {
@@ -181,9 +192,14 @@ export function ProjectsSection() {
             <Card
               key={index}
               ref={(el) => {
-                if (el && observerRef.current && index > 2) {
+                if (el && index > 2) {
                   el.setAttribute('data-index', index.toString())
-                  observerRef.current.observe(el)
+                  // Use setTimeout to ensure observer is ready
+                  setTimeout(() => {
+                    if (observerRef.current) {
+                      observerRef.current.observe(el)
+                    }
+                  }, 0)
                 }
               }}
               className={`group overflow-hidden transition-all duration-500 border-accent/10 ${
@@ -194,7 +210,7 @@ export function ProjectsSection() {
               {...getInteractionProps(cardId)}
             >
               <div className="relative overflow-hidden">
-                {!loadedImages.has(index) && <ImageSkeleton />}
+                {!loadedImages.has(index) && visibleImages.has(index) && <ImageSkeleton />}
                 {visibleImages.has(index) && (
                   <Image
                     src={project.image || "/placeholder.svg"}
@@ -212,6 +228,7 @@ export function ProjectsSection() {
                     placeholder="blur"
                     blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     onLoad={() => handleImageLoad(index)}
+                    onError={() => handleImageLoad(index)} // Handle error case
                   />
                 )}
                 <div className={`absolute inset-0 bg-gradient-to-t from-background/80 to-transparent transition-opacity duration-300 ${
