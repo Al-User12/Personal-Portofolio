@@ -7,7 +7,7 @@ import { ExternalLink, Github, MessageCircle, Play } from "lucide-react"
 import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function ProjectsSection() {
-  const { isMobile, isActive, getInteractionProps, getHoverClasses } = useMobileInteractions()
+  const { isMobile, getTouchInteractionProps, getTouchClasses } = useMobileInteractions()
   
   const projects = [
     {
@@ -116,43 +116,44 @@ export function ProjectsSection() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => {
             const cardId = `project-card-${index}`
-            const isCardActive = isActive(cardId)
             
             return (
             <Card
               key={index}
-              className={`group overflow-hidden transition-all duration-500 border-accent/10 ${
-                isMobile 
-                  ? (isCardActive ? 'shadow-2xl border-accent/30' : 'hover:shadow-2xl hover:border-accent/30')
-                  : 'hover:shadow-2xl hover:border-accent/30'
-              }`}
-              {...getInteractionProps(cardId)}
+              {...getTouchInteractionProps(cardId, {
+                hapticFeedback: true
+              })}
+              className={getTouchClasses(cardId, {
+                baseClasses: 'group overflow-hidden transition-all duration-500 border-accent/10',
+                hoverClasses: 'hover:shadow-2xl hover:border-accent/30 hover:scale-[1.02]',
+                pressedClasses: 'shadow-2xl border-accent/30 scale-[0.98]'
+              })}
             >
               <div className="relative overflow-hidden">
                 <img
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
-                  className={`w-full h-48 object-cover transition-transform duration-500 ${
-                    isMobile 
-                      ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
-                      : 'group-hover:scale-110'
-                  }`}
+                  className={getTouchClasses(`${cardId}-image`, {
+                    baseClasses: 'w-full h-48 object-cover transition-transform duration-500',
+                    hoverClasses: 'group-hover:scale-110',
+                    pressedClasses: 'scale-110'
+                  })}
                 />
-                <div className={`absolute inset-0 bg-gradient-to-t from-background/80 to-transparent transition-opacity duration-300 ${
-                  isMobile 
-                    ? (isCardActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')
-                    : 'opacity-0 group-hover:opacity-100'
-                }`} />
+                <div className={getTouchClasses(`${cardId}-overlay`, {
+                  baseClasses: 'absolute inset-0 bg-gradient-to-t from-background/80 to-transparent transition-opacity duration-300 opacity-0',
+                  hoverClasses: 'group-hover:opacity-100',
+                  pressedClasses: 'opacity-100'
+                })} />
                 <div className="absolute top-4 right-4">
                   <Badge variant="secondary" className="bg-accent/90 text-accent-foreground">
                     {project.status}
                   </Badge>
                 </div>
-                <div className={`absolute bottom-4 left-4 right-4 transition-opacity duration-300 ${
-                  isMobile 
-                    ? (isCardActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')
-                    : 'opacity-0 group-hover:opacity-100'
-                }`}>
+                <div className={getTouchClasses(`${cardId}-buttons`, {
+                  baseClasses: 'absolute bottom-4 left-4 right-4 transition-opacity duration-300 opacity-0',
+                  hoverClasses: 'group-hover:opacity-100',
+                  pressedClasses: 'opacity-100'
+                })}>
                   <div className="flex gap-2">
                     <Button 
                       size="sm" 
@@ -184,18 +185,18 @@ export function ProjectsSection() {
                   <Badge variant="outline" className="text-xs border-accent/30 text-accent">
                     {project.category}
                   </Badge>
-                  <ExternalLink className={`w-4 h-4 text-muted-foreground transition-colors ${
-                    isMobile 
-                      ? (isCardActive ? 'text-accent' : 'group-hover:text-accent')
-                      : 'group-hover:text-accent'
-                  }`} />
+                  <ExternalLink className={getTouchClasses(`${cardId}-external-icon`, {
+                    baseClasses: 'w-4 h-4 text-muted-foreground transition-colors',
+                    hoverClasses: 'group-hover:text-accent',
+                    pressedClasses: 'text-accent'
+                  })} />
                 </div>
 
-                <h3 className={`text-xl font-bold mb-3 text-foreground transition-colors ${
-                  isMobile 
-                    ? (isCardActive ? 'text-accent' : 'group-hover:text-accent')
-                    : 'group-hover:text-accent'
-                }`}>
+                <h3 className={getTouchClasses(`${cardId}-title`, {
+                  baseClasses: 'text-xl font-bold mb-3 text-foreground transition-colors',
+                  hoverClasses: 'group-hover:text-accent',
+                  pressedClasses: 'text-accent'
+                })}>
                   {project.title}
                 </h3>
 

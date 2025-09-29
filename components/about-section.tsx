@@ -6,7 +6,7 @@ import { Code2, Brain, Blocks, Globe } from "lucide-react"
 import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function AboutSection() {
-  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
+  const { isMobile, getTouchInteractionProps, getTouchClasses } = useMobileInteractions()
   
   const skills = [
     // 🧠 Languages & Frameworks
@@ -170,23 +170,24 @@ export function AboutSection() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {specialties.map((specialty, index) => {
               const cardId = `specialty-card-${index}`
-              const isCardActive = isActive(cardId)
               
               return (
               <Card
                 key={index}
-                className={`p-6 text-center transition-all duration-300 border-accent/10 group ${
-                  isMobile 
-                    ? (isCardActive ? 'shadow-lg border-accent/30' : 'hover:shadow-lg hover:border-accent/30')
-                    : 'hover:shadow-lg hover:border-accent/30'
-                }`}
-                {...getInteractionProps(cardId)}
+                {...getTouchInteractionProps(cardId, {
+                  hapticFeedback: true
+                })}
+                className={getTouchClasses(cardId, {
+                  baseClasses: 'p-6 text-center transition-all duration-300 border-accent/10 group',
+                  hoverClasses: 'hover:shadow-lg hover:border-accent/30 hover:scale-105',
+                  pressedClasses: 'shadow-lg border-accent/30 scale-95'
+                })}
               >
-                <div className={`text-accent mb-4 flex justify-center transition-transform ${
-                  isMobile 
-                    ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
-                    : 'group-hover:scale-110'
-                }`}>
+                <div className={getTouchClasses(`${cardId}-icon`, {
+                  baseClasses: 'text-accent mb-4 flex justify-center transition-transform',
+                  hoverClasses: 'group-hover:scale-110',
+                  pressedClasses: 'scale-110'
+                })}>
                   {specialty.icon}
                 </div>
                 <h4 className="font-semibold mb-2 text-foreground">{specialty.title}</h4>

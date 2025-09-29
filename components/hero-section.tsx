@@ -11,7 +11,7 @@ export function HeroSection() {
   const [typedText, setTypedText] = useState("")
   const [showCursor, setShowCursor] = useState(true)
   const [typingComplete, setTypingComplete] = useState(false)
-  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
+  const { isMobile, getTouchInteractionProps, getTouchClasses } = useMobileInteractions()
 
   useEffect(() => {
     setMounted(true)
@@ -189,44 +189,35 @@ export function HeroSection() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
                   <Button
                     size="lg"
-                    className={`bg-[#7B2CBF] border-2 border-[#E6C200] px-8 py-4 text-lg font-semibold group transition-all duration-300 min-h-[64px] rounded-xl ${
-                      isMobile && isActive('explore-btn')
-                        ? 'bg-[#E6C200] text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
-                        : 'hover:bg-[#E6C200] hover:text-[#7B2CBF] shadow-[0_8px_32px_rgba(123,44,191,0.3)] hover:shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
-                    }`}
-                    onClick={(e) => {
-                      if (isMobile) {
-                        const props = getInteractionProps('explore-btn')
-                        props.onClick?.(e)
-                        // Add small delay before scrolling to allow animation
-                        setTimeout(() => scrollToSection("projects"), 150)
-                      } else {
-                        scrollToSection("projects")
-                      }
-                    }}
+                    {...getTouchInteractionProps('explore-btn', {
+                      onTap: () => scrollToSection("projects"),
+                      hapticFeedback: true
+                    })}
+                    className={getTouchClasses('explore-btn', {
+                      baseClasses: 'bg-[#7B2CBF] border-2 border-[#E6C200] px-8 py-4 text-lg font-semibold group transition-all duration-300 min-h-[64px] rounded-xl shadow-[0_8px_32px_rgba(123,44,191,0.3)]',
+                      hoverClasses: 'hover:bg-[#E6C200] hover:text-[#7B2CBF] hover:shadow-[0_8px_32px_rgba(230,194,0,0.4)] hover:scale-105',
+                      pressedClasses: 'bg-[#E6C200] text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.4)] scale-95'
+                    })}
                   >
-                    <Sparkles className={`w-5 h-5 mr-2 transition-transform ${
-                      isMobile && isActive('explore-btn') ? 'rotate-12' : 'group-hover:rotate-12'
-                    }`} />
+                    <Sparkles className={getTouchClasses('explore-btn-icon', {
+                      baseClasses: 'w-5 h-5 mr-2 transition-transform duration-300',
+                      hoverClasses: 'group-hover:rotate-12',
+                      pressedClasses: 'rotate-12'
+                    })} />
                     Explore My Work
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
-                    className={`border-2 border-[#E6C200] text-[#E6C200] px-8 py-4 text-lg bg-transparent transition-all duration-300 min-h-[64px] rounded-xl font-semibold ${
-                      isMobile && isActive('contact-btn')
-                        ? 'bg-[#E6C200] text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
-                        : 'hover:bg-[#E6C200] hover:text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.2)] hover:shadow-[0_8px_32px_rgba(230,194,0,0.4)]'
-                    }`}
-                    onClick={(e) => {
-                      if (isMobile) {
-                        const props = getInteractionProps('contact-btn')
-                        props.onClick?.(e)
-                        setTimeout(() => scrollToSection("contact"), 150)
-                      } else {
-                        scrollToSection("contact")
-                      }
-                    }}
+                    {...getTouchInteractionProps('contact-btn', {
+                      onTap: () => scrollToSection("contact"),
+                      hapticFeedback: true
+                    })}
+                    className={getTouchClasses('contact-btn', {
+                      baseClasses: 'border-2 border-[#E6C200] text-[#E6C200] px-8 py-4 text-lg bg-transparent transition-all duration-300 min-h-[64px] rounded-xl font-semibold shadow-[0_8px_32px_rgba(230,194,0,0.2)]',
+                      hoverClasses: 'hover:bg-[#E6C200] hover:text-[#7B2CBF] hover:shadow-[0_8px_32px_rgba(230,194,0,0.4)] hover:scale-105',
+                      pressedClasses: 'bg-[#E6C200] text-[#7B2CBF] shadow-[0_8px_32px_rgba(230,194,0,0.4)] scale-95'
+                    })}
                   >
                     Contact the Dev
                   </Button>
@@ -313,23 +304,22 @@ export function HeroSection() {
         }`}
       >
         <button
-          onClick={(e) => {
-            if (isMobile) {
-              const props = getInteractionProps('scroll-indicator')
-              props.onClick?.(e)
-              setTimeout(() => scrollToSection("about"), 150)
-            } else {
-              scrollToSection("about")
-            }
-          }}
-          className={`flex flex-col items-center gap-2 text-white/70 transition-colors group ${
-            isMobile && isActive('scroll-indicator') ? 'text-[#E6C200]' : 'hover:text-[#E6C200]'
-          }`}
+          {...getTouchInteractionProps('scroll-indicator', {
+            onTap: () => scrollToSection("about"),
+            hapticFeedback: true
+          })}
+          className={getTouchClasses('scroll-indicator', {
+            baseClasses: 'flex flex-col items-center gap-2 text-white/70 transition-colors group',
+            hoverClasses: 'hover:text-[#E6C200] hover:scale-105',
+            pressedClasses: 'text-[#E6C200] scale-95'
+          })}
         >
           <span className="text-sm font-medium">Scroll to discover</span>
-          <ArrowDown className={`w-5 h-5 animate-bounce text-[#E6C200] ${
-            isMobile && isActive('scroll-indicator') ? 'text-[#E6C200]' : 'group-hover:text-[#E6C200]'
-          }`} />
+          <ArrowDown className={getTouchClasses('scroll-indicator-arrow', {
+            baseClasses: 'w-5 h-5 animate-bounce text-[#E6C200] transition-colors',
+            hoverClasses: 'group-hover:text-[#E6C200]',
+            pressedClasses: 'text-[#E6C200]'
+          })} />
         </button>
       </div>
 
