@@ -1,11 +1,13 @@
 "use client"
 
-import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Code2, Brain, Blocks, Globe } from "lucide-react"
+import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function AboutSection() {
+  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
+  
   const skills = [
     // 🧠 Languages & Frameworks
     "JavaScript",
@@ -85,12 +87,12 @@ export function AboutSection() {
   ]
 
   return (
-    <section id="about" className="py-20 relative" aria-labelledby="about-heading">
+    <section id="about" className="py-20 relative">
       {/* Smooth Blend Overlay */}
-      <div className="absolute inset-0 section-blend pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-0 section-blend pointer-events-none" />
       
       {/* Floating elements coming from hero */}
-      <div className="absolute top-0 left-0 w-full h-40 pointer-events-none overflow-hidden" aria-hidden="true">
+      <div className="absolute top-0 left-0 w-full h-40 pointer-events-none overflow-hidden">
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
@@ -112,14 +114,10 @@ export function AboutSection() {
           <div className="space-y-6">
             <div className="relative">
               <div className="w-80 h-80 mx-auto lg:mx-0 rounded-2xl overflow-hidden border-4 border-accent/20 shadow-2xl">
-                <Image
+                <img
                   src="/professional-portrait-of-al-fikri-kholil-misbah--s.png"
-                  alt="Professional portrait of Al Fikri Kholil Misbah, Software Engineer specializing in AI, Blockchain, and Modern Web Development"
+                  alt="Al Fikri Kholil Misbah"
                   className="w-full h-full object-cover"
-                  width={320}
-                  height={320}
-                  priority
-                  sizes="(max-width: 768px) 280px, 320px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
               </div>
@@ -130,7 +128,7 @@ export function AboutSection() {
 
           <div className="space-y-8">
             <div>
-              <h2 id="about-heading" className="royal-heading text-3xl md:text-4xl font-bold mb-6 text-accent">The Digital Artisan</h2>
+              <h2 className="royal-heading text-3xl md:text-4xl font-bold mb-6 text-accent">The Digital Artisan</h2>
               <div className="space-y-4 royal-text text-lg text-muted-foreground">
                 <p>
                   Greetings, fellow seekers of digital excellence. I am Al Fikri Kholil Misbah, a craftsman in the realm
@@ -170,18 +168,32 @@ export function AboutSection() {
         <div className="mt-16">
           <h3 className="royal-heading text-2xl font-bold text-center mb-12 text-accent">Domains of Mastery</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {specialties.map((specialty, index) => (
+            {specialties.map((specialty, index) => {
+              const cardId = `specialty-card-${index}`
+              const isCardActive = isActive(cardId)
+              
+              return (
               <Card
                 key={index}
-                className="p-6 text-center hover:shadow-lg transition-all duration-300 border-accent/10 hover:border-accent/30 group"
+                className={`p-6 text-center transition-all duration-300 border-accent/10 group ${
+                  isMobile 
+                    ? (isCardActive ? 'shadow-lg border-accent/30' : 'hover:shadow-lg hover:border-accent/30')
+                    : 'hover:shadow-lg hover:border-accent/30'
+                }`}
+                {...getInteractionProps(cardId)}
               >
-                <div className="text-accent mb-4 flex justify-center group-hover:scale-110 transition-transform">
+                <div className={`text-accent mb-4 flex justify-center transition-transform ${
+                  isMobile 
+                    ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
+                    : 'group-hover:scale-110'
+                }`}>
                   {specialty.icon}
                 </div>
                 <h4 className="font-semibold mb-2 text-foreground">{specialty.title}</h4>
                 <p className="text-sm text-muted-foreground royal-text">{specialty.description}</p>
               </Card>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>
