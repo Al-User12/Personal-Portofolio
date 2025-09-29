@@ -13,7 +13,7 @@ export function ParticleBackground() {
     // Check device capabilities
     const checkDeviceCapabilities = () => {
       const isMobileDevice = window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-      const isLowPerfDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4
+      const isLowPerfDevice = Boolean(navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4)
       
       setIsMobile(isMobileDevice)
       setIsLowPerformance(isLowPerfDevice)

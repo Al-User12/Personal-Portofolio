@@ -17,7 +17,7 @@ export function HeroSection() {
     setMounted(true)
     // Defer particle creation to improve initial load
     const timer = setTimeout(() => {
-      createParticles()
+    createParticles()
     }, 500)
     return () => clearTimeout(timer)
   }, [])
