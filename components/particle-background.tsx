@@ -57,11 +57,12 @@ export function ParticleBackground() {
       canvas.style.height = rect.height + "px"
       
       ctx.scale(dpr, dpr)
+      
+      return { width: rect.width, height: rect.height }
     }
 
-    resizeCanvas()
-    window.addEventListener("resize", resizeCanvas)
-
+    const canvasSize = resizeCanvas()
+    
     const particles: Array<{
       x: number
       y: number
@@ -76,17 +77,31 @@ export function ParticleBackground() {
     if (isMobile) particleCount = 15
     if (isLowPerformance) particleCount = Math.min(particleCount, 10)
 
-    // Create particles
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * (canvas.width / (window.devicePixelRatio || 1)),
-        y: Math.random() * (canvas.height / (window.devicePixelRatio || 1)),
-        vx: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.5),
-        vy: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.5),
-        size: Math.random() * (isMobile ? 1.5 : 2) + (isMobile ? 0.5 : 1),
-        opacity: Math.random() * 0.4 + 0.1,
-      })
+    // Create particles with proper canvas dimensions
+    const initializeParticles = () => {
+      particles.length = 0 // Clear existing particles
+      const currentSize = canvas.getBoundingClientRect()
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * currentSize.width,
+          y: Math.random() * currentSize.height,
+          vx: (Math.random() - 0.5) * (isMobile ? 0.3 : 0.8),
+          vy: (Math.random() - 0.5) * (isMobile ? 0.3 : 0.8),
+          size: Math.random() * (isMobile ? 1.5 : 2) + (isMobile ? 0.5 : 1),
+          opacity: Math.random() * 0.4 + 0.1,
+        })
+      }
     }
+
+    initializeParticles()
+
+    const handleResize = () => {
+      resizeCanvas()
+      initializeParticles() // Reinitialize particles on resize
+    }
+
+    window.addEventListener("resize", handleResize)
 
     let lastTime = 0
     const targetFPS = isMobile ? 30 : 60
@@ -104,18 +119,27 @@ export function ParticleBackground() {
           particle.x += particle.vx
           particle.y += particle.vy
 
-          // Wrap around edges
-          const rect = canvas.getBoundingClientRect()
-          if (particle.x < 0) particle.x = rect.width
-          if (particle.x > rect.width) particle.x = 0
-          if (particle.y < 0) particle.y = rect.height
-          if (particle.y > rect.height) particle.y = 0
+          // Wrap around edges with proper boundary checking
+          if (particle.x < -particle.size) {
+            particle.x = rect.width + particle.size
+          } else if (particle.x > rect.width + particle.size) {
+            particle.x = -particle.size
+          }
+          
+          if (particle.y < -particle.size) {
+            particle.y = rect.height + particle.size
+          } else if (particle.y > rect.height + particle.size) {
+            particle.y = -particle.size
+          }
 
-          // Draw particle with reduced opacity for mobile
+          // Draw particle with improved rendering
+          ctx.save()
+          ctx.globalAlpha = particle.opacity * (isMobile ? 0.7 : 1)
           ctx.beginPath()
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(230, 194, 0, ${particle.opacity * (isMobile ? 0.6 : 1)})` // Accessible gold color
+          ctx.fillStyle = "rgba(230, 194, 0, 1)" // Accessible gold color
           ctx.fill()
+          ctx.restore()
         })
 
         lastTime = currentTime
@@ -127,7 +151,7 @@ export function ParticleBackground() {
     animationRef.current = requestAnimationFrame(animate)
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas)
+      window.removeEventListener("resize", handleResize)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }

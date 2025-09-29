@@ -57,15 +57,6 @@ export function ProjectsSection() {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.getAttribute('data-index') || '0')
             setVisibleImages(prev => new Set([...prev, index]))
-            
-            // Preload the image when it becomes visible
-            const project = projects[index]
-            if (project && project.image) {
-              const img = new window.Image()
-              img.src = project.image
-              img.onload = () => handleImageLoad(index)
-              img.onerror = () => handleImageLoad(index) // Handle error case
-            }
           }
         })
       },
@@ -77,7 +68,22 @@ export function ProjectsSection() {
         observerRef.current.disconnect()
       }
     }
-  }, [handleImageLoad])
+  }, [])
+
+  // Handle image preloading when images become visible
+  useEffect(() => {
+    visibleImages.forEach((index) => {
+      if (index > 2 && !loadedImages.has(index)) {
+        const project = projects[index]
+        if (project && project.image) {
+          const img = new window.Image()
+          img.src = project.image
+          img.onload = () => handleImageLoad(index)
+          img.onerror = () => handleImageLoad(index)
+        }
+      }
+    })
+  }, [visibleImages, loadedImages, handleImageLoad])
   
   const projects = [
     {
@@ -210,8 +216,11 @@ export function ProjectsSection() {
               {...getInteractionProps(cardId)}
             >
               <div className="relative overflow-hidden">
-                {!loadedImages.has(index) && visibleImages.has(index) && <ImageSkeleton />}
-                {visibleImages.has(index) && (
+                {/* Show skeleton while loading for visible images */}
+                {(index < 3 || visibleImages.has(index)) && !loadedImages.has(index) && <ImageSkeleton />}
+                
+                {/* Always render images for first 3, render others only when visible */}
+                {(index < 3 || visibleImages.has(index)) && (
                   <Image
                     src={project.image || "/placeholder.svg"}
                     alt={`Screenshot of ${project.title} - ${project.description.substring(0, 80)}...`}
