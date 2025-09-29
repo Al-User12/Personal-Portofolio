@@ -4,12 +4,10 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Moon, Sun, Crown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDark, setIsDark] = useState(true)
-  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,6 +47,7 @@ export function Navigation() {
             <span className="font-serif text-xl font-bold text-accent">alfikri-labs</span>
           </button>
 
+<<<<<<< HEAD
           <ul className="hidden md:flex items-center gap-8" role="menubar">
             <li role="none">
               <button
@@ -150,6 +149,37 @@ export function Navigation() {
             aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
           >
             {isDark ? <Sun className="w-5 h-5" aria-hidden="true" /> : <Moon className="w-5 h-5" aria-hidden="true" />}
+=======
+          <div className="hidden md:flex items-center gap-8">
+            <button
+              onClick={() => scrollToSection("about")}
+              className="text-muted-foreground hover:text-accent transition-colors"
+            >
+              About
+            </button>
+            <button
+              onClick={() => scrollToSection("experience")}
+              className="text-muted-foreground hover:text-accent transition-colors"
+            >
+              Experience
+            </button>
+            <button
+              onClick={() => scrollToSection("projects")}
+              className="text-muted-foreground hover:text-accent transition-colors"
+            >
+              Projects
+            </button>
+            <button
+              onClick={() => scrollToSection("contact")}
+              className="text-muted-foreground hover:text-accent transition-colors"
+            >
+              Contact
+            </button>
+          </div>
+
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-accent/10">
+            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+>>>>>>> parent of 8ca8878 (Refactor project for mobile interactions and update project name. Added a new hook for managing mobile interactions, enhancing user experience across various sections. Updated styles and interaction logic in multiple components to support mobile-specific behaviors.)
           </Button>
         </div>
       </div>

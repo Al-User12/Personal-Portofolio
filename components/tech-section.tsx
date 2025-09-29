@@ -3,11 +3,8 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Code2, Database, Cloud, Cpu, Palette, Shield, Globe } from "lucide-react"
-import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function TechSection() {
-  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
-  
   const techCategories = [
     {
       icon: <Globe className="w-6 h-6" />,
@@ -103,31 +100,14 @@ export function TechSection() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {techCategories.map((category, index) => {
-            const cardId = `tech-card-${index}`
-            const isCardActive = isActive(cardId)
-            
-            return (
+          {techCategories.map((category, index) => (
             <Card
               key={index}
-              className={`p-6 transition-all duration-300 border-accent/10 group ${
-                isMobile 
-                  ? (isCardActive ? 'shadow-xl border-accent/30' : 'hover:shadow-xl hover:border-accent/30')
-                  : 'hover:shadow-xl hover:border-accent/30'
-              }`}
-              {...getInteractionProps(cardId)}
+              className="p-6 hover:shadow-xl transition-all duration-300 border-accent/10 hover:border-accent/30 group"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className={`text-accent transition-transform ${
-                  isMobile 
-                    ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
-                    : 'group-hover:scale-110'
-                }`}>{category.icon}</div>
-                <h3 className={`text-lg font-semibold text-foreground transition-colors ${
-                  isMobile 
-                    ? (isCardActive ? 'text-accent' : 'group-hover:text-accent')
-                    : 'group-hover:text-accent'
-                }`}>
+                <div className="text-accent group-hover:scale-110 transition-transform">{category.icon}</div>
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
                   {category.title}
                 </h3>
               </div>
@@ -144,8 +124,7 @@ export function TechSection() {
                 ))}
               </div>
             </Card>
-            )
-          })}
+          ))}
         </div>
 
         {/* Continuous Learning */}

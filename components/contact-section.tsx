@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Mail, MessageCircle, Send, Github, Linkedin, Twitter, Instagram } from "lucide-react"
-import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -19,7 +18,6 @@ export function ContactSection() {
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,12 +88,7 @@ Sent from Royal Portfolio Contact Form`
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Form */}
-          <Card 
-            className={`p-8 border-accent/10 transition-colors ${
-              isMobile && isActive('contact-form') ? 'border-accent/30' : 'hover:border-accent/30'
-            }`}
-            {...getInteractionProps('contact-form')}
-          >
+          <Card className="p-8 border-accent/10 hover:border-accent/30 transition-colors">
             <div className="flex items-center gap-3 mb-6">
               <MessageCircle className="w-6 h-6 text-accent" />
               <h3 className="text-2xl font-bold text-foreground">Send a Message</h3>
@@ -157,19 +150,10 @@ Sent from Royal Portfolio Contact Form`
               <Button
                 type="submit"
                 size="lg"
-                className={`w-full bg-accent text-accent-foreground group ${
-                  isMobile && isActive('submit-btn') ? 'bg-accent/90' : 'hover:bg-accent/90'
-                }`}
+                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground group"
                 disabled={isSubmitting}
-                {...(isMobile ? getInteractionProps('submit-btn') : {})}
               >
-                <Send className={`w-5 h-5 mr-2 transition-transform ${
-                  isSubmitting 
-                    ? 'animate-pulse' 
-                    : isMobile && isActive('submit-btn')
-                    ? 'translate-x-1'
-                    : 'group-hover:translate-x-1'
-                }`} />
+                <Send className={`w-5 h-5 mr-2 transition-transform ${isSubmitting ? 'animate-pulse' : 'group-hover:translate-x-1'}`} />
                 {isSubmitting ? 'Opening Email Client...' : 'Send Message'}
               </Button>
             </form>
@@ -206,29 +190,19 @@ Sent from Royal Portfolio Contact Form`
             <Card className="p-8 border-accent/10">
               <h3 className="text-xl font-bold text-foreground mb-6">Connect & Follow</h3>
               <div className="grid grid-cols-2 gap-4">
-                {socialLinks.map((link, index) => {
-                  const buttonId = `social-btn-${index}`
-                  const isButtonActive = isActive(buttonId)
-                  
-                  return (
+                {socialLinks.map((link, index) => (
                   <Button
                     key={index}
                     variant="outline"
-                    className={`justify-start border-accent/20 bg-transparent ${
-                      isMobile && isButtonActive 
-                        ? 'border-accent bg-accent/10' 
-                        : 'hover:border-accent hover:bg-accent/10'
-                    }`}
+                    className="justify-start border-accent/20 hover:border-accent hover:bg-accent/10 bg-transparent"
                     asChild
-                    {...(isMobile ? getInteractionProps(buttonId) : {})}
                   >
                     <a href={link.href} target="_blank" rel="noopener noreferrer">
                       {link.icon}
                       <span className="ml-2">{link.label}</span>
                     </a>
                   </Button>
-                  )
-                })}
+                ))}
               </div>
             </Card>
 
