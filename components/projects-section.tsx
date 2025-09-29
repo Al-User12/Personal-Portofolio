@@ -4,8 +4,11 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, Github, MessageCircle, Play } from "lucide-react"
+import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function ProjectsSection() {
+  const { isMobile, isActive, getInteractionProps, getHoverClasses } = useMobileInteractions()
+  
   const projects = [
     {
       title: "AI Dubbing SaaS",
@@ -111,24 +114,45 @@ export function ProjectsSection() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {projects.map((project, index) => {
+            const cardId = `project-card-${index}`
+            const isCardActive = isActive(cardId)
+            
+            return (
             <Card
               key={index}
-              className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-accent/10 hover:border-accent/30"
+              className={`group overflow-hidden transition-all duration-500 border-accent/10 ${
+                isMobile 
+                  ? (isCardActive ? 'shadow-2xl border-accent/30' : 'hover:shadow-2xl hover:border-accent/30')
+                  : 'hover:shadow-2xl hover:border-accent/30'
+              }`}
+              {...getInteractionProps(cardId)}
             >
               <div className="relative overflow-hidden">
                 <img
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
-                  className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                  className={`w-full h-48 object-cover transition-transform duration-500 ${
+                    isMobile 
+                      ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
+                      : 'group-hover:scale-110'
+                  }`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className={`absolute inset-0 bg-gradient-to-t from-background/80 to-transparent transition-opacity duration-300 ${
+                  isMobile 
+                    ? (isCardActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')
+                    : 'opacity-0 group-hover:opacity-100'
+                }`} />
                 <div className="absolute top-4 right-4">
                   <Badge variant="secondary" className="bg-accent/90 text-accent-foreground">
                     {project.status}
                   </Badge>
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className={`absolute bottom-4 left-4 right-4 transition-opacity duration-300 ${
+                  isMobile 
+                    ? (isCardActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')
+                    : 'opacity-0 group-hover:opacity-100'
+                }`}>
                   <div className="flex gap-2">
                     <Button 
                       size="sm" 
@@ -160,10 +184,18 @@ export function ProjectsSection() {
                   <Badge variant="outline" className="text-xs border-accent/30 text-accent">
                     {project.category}
                   </Badge>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+                  <ExternalLink className={`w-4 h-4 text-muted-foreground transition-colors ${
+                    isMobile 
+                      ? (isCardActive ? 'text-accent' : 'group-hover:text-accent')
+                      : 'group-hover:text-accent'
+                  }`} />
                 </div>
 
-                <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-accent transition-colors">
+                <h3 className={`text-xl font-bold mb-3 text-foreground transition-colors ${
+                  isMobile 
+                    ? (isCardActive ? 'text-accent' : 'group-hover:text-accent')
+                    : 'group-hover:text-accent'
+                }`}>
                   {project.title}
                 </h3>
 
@@ -197,7 +229,8 @@ export function ProjectsSection() {
                 </div>
               </div>
             </Card>
-          ))}
+            )
+          })}
         </div>
 
         <div className="text-center mt-12">

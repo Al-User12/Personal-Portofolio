@@ -3,8 +3,11 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Code2, Brain, Blocks, Globe } from "lucide-react"
+import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function AboutSection() {
+  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
+  
   const skills = [
     // 🧠 Languages & Frameworks
     "JavaScript",
@@ -165,18 +168,32 @@ export function AboutSection() {
         <div className="mt-16">
           <h3 className="royal-heading text-2xl font-bold text-center mb-12 text-accent">Domains of Mastery</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {specialties.map((specialty, index) => (
+            {specialties.map((specialty, index) => {
+              const cardId = `specialty-card-${index}`
+              const isCardActive = isActive(cardId)
+              
+              return (
               <Card
                 key={index}
-                className="p-6 text-center hover:shadow-lg transition-all duration-300 border-accent/10 hover:border-accent/30 group"
+                className={`p-6 text-center transition-all duration-300 border-accent/10 group ${
+                  isMobile 
+                    ? (isCardActive ? 'shadow-lg border-accent/30' : 'hover:shadow-lg hover:border-accent/30')
+                    : 'hover:shadow-lg hover:border-accent/30'
+                }`}
+                {...getInteractionProps(cardId)}
               >
-                <div className="text-accent mb-4 flex justify-center group-hover:scale-110 transition-transform">
+                <div className={`text-accent mb-4 flex justify-center transition-transform ${
+                  isMobile 
+                    ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
+                    : 'group-hover:scale-110'
+                }`}>
                   {specialty.icon}
                 </div>
                 <h4 className="font-semibold mb-2 text-foreground">{specialty.title}</h4>
                 <p className="text-sm text-muted-foreground royal-text">{specialty.description}</p>
               </Card>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

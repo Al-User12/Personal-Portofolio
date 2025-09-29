@@ -4,10 +4,12 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Moon, Sun, Crown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDark, setIsDark] = useState(true)
+  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,32 +44,87 @@ export function Navigation() {
 
           <div className="hidden md:flex items-center gap-8">
             <button
-              onClick={() => scrollToSection("about")}
-              className="text-muted-foreground hover:text-accent transition-colors"
+              onClick={(e) => {
+                if (isMobile) {
+                  const props = getInteractionProps('nav-about')
+                  props.onClick?.(e)
+                  setTimeout(() => scrollToSection("about"), 100)
+                } else {
+                  scrollToSection("about")
+                }
+              }}
+              className={`text-muted-foreground transition-colors ${
+                isMobile && isActive('nav-about') ? 'text-accent' : 'hover:text-accent'
+              }`}
             >
               About
             </button>
             <button
-              onClick={() => scrollToSection("experience")}
-              className="text-muted-foreground hover:text-accent transition-colors"
+              onClick={(e) => {
+                if (isMobile) {
+                  const props = getInteractionProps('nav-experience')
+                  props.onClick?.(e)
+                  setTimeout(() => scrollToSection("experience"), 100)
+                } else {
+                  scrollToSection("experience")
+                }
+              }}
+              className={`text-muted-foreground transition-colors ${
+                isMobile && isActive('nav-experience') ? 'text-accent' : 'hover:text-accent'
+              }`}
             >
               Experience
             </button>
             <button
-              onClick={() => scrollToSection("projects")}
-              className="text-muted-foreground hover:text-accent transition-colors"
+              onClick={(e) => {
+                if (isMobile) {
+                  const props = getInteractionProps('nav-projects')
+                  props.onClick?.(e)
+                  setTimeout(() => scrollToSection("projects"), 100)
+                } else {
+                  scrollToSection("projects")
+                }
+              }}
+              className={`text-muted-foreground transition-colors ${
+                isMobile && isActive('nav-projects') ? 'text-accent' : 'hover:text-accent'
+              }`}
             >
               Projects
             </button>
             <button
-              onClick={() => scrollToSection("contact")}
-              className="text-muted-foreground hover:text-accent transition-colors"
+              onClick={(e) => {
+                if (isMobile) {
+                  const props = getInteractionProps('nav-contact')
+                  props.onClick?.(e)
+                  setTimeout(() => scrollToSection("contact"), 100)
+                } else {
+                  scrollToSection("contact")
+                }
+              }}
+              className={`text-muted-foreground transition-colors ${
+                isMobile && isActive('nav-contact') ? 'text-accent' : 'hover:text-accent'
+              }`}
             >
               Contact
             </button>
           </div>
 
-          <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-accent/10">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={(e) => {
+              if (isMobile) {
+                const props = getInteractionProps('theme-toggle')
+                props.onClick?.(e)
+                setTimeout(toggleTheme, 100)
+              } else {
+                toggleTheme()
+              }
+            }}
+            className={`${
+              isMobile && isActive('theme-toggle') ? 'bg-accent/10' : 'hover:bg-accent/10'
+            }`}
+          >
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </Button>
         </div>

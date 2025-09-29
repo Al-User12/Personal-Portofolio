@@ -3,8 +3,11 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, MapPin, ExternalLink } from "lucide-react"
+import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
 
 export function ExperienceSection() {
+  const { isMobile, isActive, getInteractionProps } = useMobileInteractions()
+  
   const experiences = [
     {
       company: "MeetGeek (via Cerulean Studio / Going Macro)",
@@ -97,7 +100,11 @@ export function ExperienceSection() {
           <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-accent/30 transform md:-translate-x-0.5" />
 
           <div className="space-y-12">
-            {experiences.map((exp, index) => (
+            {experiences.map((exp, index) => {
+              const cardId = `experience-card-${index}`
+              const isCardActive = isActive(cardId)
+              
+              return (
               <div
                 key={index}
                 className={`relative flex items-center ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
@@ -106,15 +113,30 @@ export function ExperienceSection() {
                 <div className="absolute left-4 md:left-1/2 w-3 h-3 bg-accent rounded-full transform -translate-x-1/2 royal-glow z-10" />
 
                 <div className={`w-full md:w-1/2 ${index % 2 === 0 ? "md:pr-8" : "md:pl-8"}`}>
-                  <Card className="p-6 ml-8 md:ml-0 hover:shadow-xl transition-all duration-300 border-accent/10 hover:border-accent/30 group">
+                  <Card 
+                    className={`p-6 ml-8 md:ml-0 transition-all duration-300 border-accent/10 group ${
+                      isMobile 
+                        ? (isCardActive ? 'shadow-xl border-accent/30' : 'hover:shadow-xl hover:border-accent/30')
+                        : 'hover:shadow-xl hover:border-accent/30'
+                    }`}
+                    {...getInteractionProps(cardId)}
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">
+                        <h3 className={`text-xl font-bold text-foreground transition-colors ${
+                          isMobile 
+                            ? (isCardActive ? 'text-accent' : 'group-hover:text-accent')
+                            : 'group-hover:text-accent'
+                        }`}>
                           {exp.role}
                         </h3>
                         <p className="text-accent font-semibold">{exp.company}</p>
                       </div>
-                      <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors opacity-0 group-hover:opacity-100" />
+                      <ExternalLink className={`w-5 h-5 text-muted-foreground transition-colors ${
+                        isMobile 
+                          ? (isCardActive ? 'text-accent opacity-100' : 'group-hover:text-accent opacity-0 group-hover:opacity-100')
+                          : 'group-hover:text-accent opacity-0 group-hover:opacity-100'
+                      }`} />
                     </div>
 
                     <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
@@ -152,7 +174,8 @@ export function ExperienceSection() {
                   </Card>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>
