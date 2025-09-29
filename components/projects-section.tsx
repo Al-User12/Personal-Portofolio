@@ -6,9 +6,67 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, Github, MessageCircle, Play } from "lucide-react"
 import { useMobileInteractions } from "@/hooks/use-mobile-interactions"
+import { useState, useEffect, useCallback, useRef } from "react"
+
+// Skeleton component for loading state
+const ImageSkeleton = () => (
+  <div className="w-full h-48 bg-gradient-to-r from-muted/50 via-muted/30 to-muted/50 animate-pulse">
+    <div className="w-full h-full bg-gradient-to-br from-accent/5 to-accent/10" />
+  </div>
+)
 
 export function ProjectsSection() {
   const { isMobile, isActive, getInteractionProps, getHoverClasses } = useMobileInteractions()
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set([0, 1, 2])) // First 3 visible by default
+  const observerRef = useRef<IntersectionObserver | null>(null)
+
+  const handleImageLoad = useCallback((index: number) => {
+    setLoadedImages(prev => new Set([...prev, index]))
+  }, [])
+
+  // Preload first 3 images for better performance
+  useEffect(() => {
+    const imagesToPreload = [
+      "/ai-dubbing-interface-with-waveforms-and-voice-cont.jpg",
+      "/hotel-booking-platform-interface-with-room-listing.jpg", 
+      "/modern-pos-system-interface-with-product-catalog-a.jpg"
+    ]
+    
+    const preloadImages = imagesToPreload.map((imageSrc, index) => {
+      const img = new window.Image()
+      img.src = imageSrc
+      img.onload = () => handleImageLoad(index)
+      return img
+    })
+
+    return () => {
+      preloadImages.forEach(img => {
+        img.onload = null
+      })
+    }
+  }, [handleImageLoad])
+
+  // Intersection Observer for lazy loading
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0')
+            setVisibleImages(prev => new Set([...prev, index]))
+          }
+        })
+      },
+      { rootMargin: '50px' }
+    )
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [])
   
   const projects = [
     {
@@ -122,6 +180,12 @@ export function ProjectsSection() {
             return (
             <Card
               key={index}
+              ref={(el) => {
+                if (el && observerRef.current && index > 2) {
+                  el.setAttribute('data-index', index.toString())
+                  observerRef.current.observe(el)
+                }
+              }}
               className={`group overflow-hidden transition-all duration-500 border-accent/10 ${
                 isMobile 
                   ? (isCardActive ? 'shadow-2xl border-accent/30' : 'hover:shadow-2xl hover:border-accent/30')
@@ -130,19 +194,26 @@ export function ProjectsSection() {
               {...getInteractionProps(cardId)}
             >
               <div className="relative overflow-hidden">
-                <Image
-                  src={project.image || "/placeholder.svg"}
-                  alt={`Screenshot of ${project.title} - ${project.description.substring(0, 80)}...`}
-                  className={`w-full h-48 object-cover transition-transform duration-500 ${
-                    isMobile 
-                      ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
-                      : 'group-hover:scale-110'
-                  }`}
-                  width={400}
-                  height={192}
-                  loading="lazy"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+                {!loadedImages.has(index) && <ImageSkeleton />}
+                {visibleImages.has(index) && (
+                  <Image
+                    src={project.image || "/placeholder.svg"}
+                    alt={`Screenshot of ${project.title} - ${project.description.substring(0, 80)}...`}
+                    className={`w-full h-48 object-cover transition-all duration-500 ${
+                      isMobile 
+                        ? (isCardActive ? 'scale-110' : 'group-hover:scale-110')
+                        : 'group-hover:scale-110'
+                    } ${loadedImages.has(index) ? 'opacity-100' : 'opacity-0'}`}
+                    width={400}
+                    height={192}
+                    priority={index < 3} // Priority loading for first 3 images
+                    loading={index < 3 ? "eager" : "lazy"}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    onLoad={() => handleImageLoad(index)}
+                  />
+                )}
                 <div className={`absolute inset-0 bg-gradient-to-t from-background/80 to-transparent transition-opacity duration-300 ${
                   isMobile 
                     ? (isCardActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')
@@ -164,8 +235,8 @@ export function ProjectsSection() {
                       className="bg-accent hover:bg-accent/90"
                       asChild
                     >
-                      <a href="https://instagram.com/yaelahfik" target="_blank" rel="noopener noreferrer">
-                        <Play className="w-4 h-4 mr-1" />
+                      <a href="https://instagram.com/yaelahfik" target="_blank" rel="noopener noreferrer" aria-label={`View demo of ${project.title}`}>
+                        <Play className="w-4 h-4 mr-1" aria-hidden="true" />
                         Demo
                       </a>
                     </Button>
@@ -175,8 +246,8 @@ export function ProjectsSection() {
                       className="border-accent text-accent hover:bg-accent hover:text-accent-foreground bg-transparent"
                       asChild
                     >
-                      <a href="https://instagram.com/yaelahfik" target="_blank" rel="noopener noreferrer">
-                        <MessageCircle className="w-4 h-4 mr-1" />
+                      <a href="https://instagram.com/yaelahfik" target="_blank" rel="noopener noreferrer" aria-label={`Ask for more information about ${project.title}`}>
+                        <MessageCircle className="w-4 h-4 mr-1" aria-hidden="true" />
                         Ask Info
                       </a>
                     </Button>
@@ -245,10 +316,10 @@ export function ProjectsSection() {
             className="border-accent text-accent hover:bg-accent hover:text-accent-foreground bg-transparent"
             asChild
             >
-            <a href="https://github.com/Al-User12" target="_blank" rel="noopener noreferrer">
-            <Github className="w-5 h-5 mr-2" />
+            <a href="https://github.com/Al-User12" target="_blank" rel="noopener noreferrer" aria-label="View all projects on GitHub (opens in new tab)">
+            <Github className="w-5 h-5 mr-2" aria-hidden="true" />
             View All Projects on GitHub
-              <ExternalLink className="w-4 h-4 ml-2" />
+              <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
             </a>
           </Button>
         </div>
