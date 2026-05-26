@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -147,11 +148,13 @@ export function ProjectsSection() {
                 pressedClasses: 'shadow-2xl border-accent/30'
               })}
             >
-              <div className="relative overflow-hidden">
-                <img
+              <div className="relative overflow-hidden h-48 w-full">
+                <Image
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
-                  className={`w-full h-48 object-cover transition-transform duration-500 ${
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className={`object-cover transition-transform duration-500 ${
                     isMobile 
                       ? (isHovered(cardId) ? 'scale-110' : 'group-hover:scale-110')
                       : 'group-hover:scale-110'

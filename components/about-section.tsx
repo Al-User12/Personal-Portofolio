@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Code2, Brain, Blocks, Globe } from "lucide-react"
@@ -113,13 +114,16 @@ export function AboutSection() {
           {/* Portrait & Bio */}
           <div className="space-y-6">
             <div className="relative">
-              <div className="w-80 h-80 mx-auto lg:mx-0 rounded-2xl overflow-hidden border-4 border-accent/20 shadow-2xl">
-                <img
+              <div className="relative w-80 h-80 mx-auto lg:mx-0 rounded-2xl overflow-hidden border-4 border-accent/20 shadow-2xl">
+                <Image
                   src="/professional-portrait-of-al-fikri-kholil-misbah--s.png"
-                  alt="Al Fikri Kholil Misbah"
-                  className="w-full h-full object-cover"
+                  alt="Al Fikri Kholil Misbah portrait"
+                  fill
+                  sizes="320px"
+                  priority
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent pointer-events-none" />
               </div>
               {/* Decorative Frame */}
               <div className="absolute -inset-4 border-2 border-accent/10 rounded-3xl -z-10" />
