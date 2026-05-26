@@ -41,6 +41,8 @@ export function ParticleBackground() {
       })
     }
 
+    let animationFrameId = 0
+
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -62,13 +64,14 @@ export function ParticleBackground() {
         ctx.fill()
       })
 
-      requestAnimationFrame(animate)
+      animationFrameId = requestAnimationFrame(animate)
     }
 
     animate()
 
     return () => {
       window.removeEventListener("resize", resizeCanvas)
+      cancelAnimationFrame(animationFrameId)
     }
   }, [])
 
