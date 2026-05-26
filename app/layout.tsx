@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   title: "Al Fikri Kholil Misbah — Software Engineer",
   description:
     "Engineering elegant systems at the intersection of AI, Blockchain, and Modern Web development. Portfolio of Al Fikri Kholil Misbah.",
-  generator: "v0.app",
   keywords: ["Software Engineer", "AI", "Blockchain", "Web Development", "Full Stack"],
   authors: [{ name: "Al Fikri Kholil Misbah" }],
   openGraph: {

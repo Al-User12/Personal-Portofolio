@@ -24,6 +24,7 @@ export function HeroSection() {
     
     const text = "Software Engineer"
     let currentIndex = 0
+    let nextCharTimeout: ReturnType<typeof setTimeout> | null = null
     
     const typingTimer = setTimeout(() => {
       const typeCharacter = () => {
@@ -38,7 +39,7 @@ export function HeroSection() {
             ? 150 // Slower after spaces
             : 80 + Math.random() * 40 // Random variation 80-120ms
           
-          setTimeout(typeCharacter, nextDelay)
+          nextCharTimeout = setTimeout(typeCharacter, nextDelay)
         } else {
           setTypingComplete(true)
         }
@@ -47,7 +48,10 @@ export function HeroSection() {
       typeCharacter()
     }, 1500) // Start typing after 1.5s delay
     
-    return () => clearTimeout(typingTimer)
+    return () => {
+      clearTimeout(typingTimer)
+      if (nextCharTimeout) clearTimeout(nextCharTimeout)
+    }
   }, [mounted])
 
   // Blinking cursor effect
