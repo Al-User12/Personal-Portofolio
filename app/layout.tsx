@@ -1,10 +1,11 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Cinzel_Decorative } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
 const cinzel = Cinzel_Decorative({
@@ -41,6 +42,7 @@ export default function RootLayout({
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${cinzel.variable}`}>
         <Suspense fallback={null}>{children}</Suspense>
+        <Toaster richColors position="top-right" />
         <Analytics />
       </body>
     </html>
